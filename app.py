@@ -17,6 +17,7 @@ app.layout = html.Div([
     ], style={'padding': '15px 25px', 'backgroundColor': '#FFFFFF', 'borderBottom': '1px solid #E0E0E0', 'marginBottom': '20px'}),
 
     # Dynamic Page Container (Dash automatically loads pages here)
+    dcc.Store(id='prediction-store', storage_type='memory'),
     dash.page_container
 ], style={'fontFamily': 'sans-serif', 'backgroundColor': '#F8F9FA', 'minHeight': '100vh', 'margin': '0'})
 

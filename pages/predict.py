@@ -114,6 +114,7 @@ def show_filename(filename):
 # Dispatch Prediction Callback
 @dash.callback(
     Output('prediction-output-display', 'children'),
+    Output('prediction-store', 'data'),  # MUST return 2 items!
     Input('btn-run-predict', 'n_clicks'),
     State('modality-selector', 'value'),
     State('input-clinical-text', 'value'),
@@ -123,7 +124,7 @@ def show_filename(filename):
 )
 def dispatch_prediction(n_clicks, modality, text_val, image_contents, filename):
     if n_clicks == 0:
-        return dash.no_update
+        return dash.no_update, dash.no_update  # Two items!
 
     try:
         # Route request to target model predictor function
@@ -134,7 +135,7 @@ def dispatch_prediction(n_clicks, modality, text_val, image_contents, filename):
         elif modality == 'multimodal':
             results = run_multimodal_model(text_val, image_contents, image_filename=filename)
         else:
-            return html.Div("Unknown modality selected.", style={'color': '#E74C3C'})
+            return html.Div("Unknown modality selected.", style={'color': '#E74C3C'}), {}  # Two items!
 
         # Extract values from return dict
         finding = results.get("finding", "Analysis complete.")
@@ -182,25 +183,27 @@ def dispatch_prediction(n_clicks, modality, text_val, image_contents, filename):
                 ])
             )
 
-            # --- NEW: Add Explainability Button ---
-            output_content.append(
-                html.Div([
-                    html.Hr(style={'margin': '15px 0'}),
-                    dcc.Link(
-                        html.Button("🔍 How Did the Model Decide?", style={
-                            'backgroundColor': '#3498DB', 'color': 'white',
-                            'border': 'none', 'padding': '10px 15px', 'fontWeight': 'bold',
-                            'borderRadius': '4px', 'cursor': 'pointer', 'width': '100%'
-                        }),
-                        href='/explain'
-                    )
-                ])
-            )
+        # Add Explainability Link Button
+        output_content.append(
+            html.Div([
+                html.Hr(style={'margin': '15px 0'}),
+                dcc.Link(
+                    html.Button("🔍 How Did the Model Decide?", style={
+                        'backgroundColor': '#3498DB', 'color': 'white',
+                        'border': 'none', 'padding': '10px 15px', 'fontWeight': 'bold',
+                        'borderRadius': '4px', 'cursor': 'pointer', 'width': '100%'
+                    }),
+                    href='/explain'
+                )
+            ])
+        )
 
-        return html.Div(output_content)
+        # IMPORTANT: Return a TUPLE with 2 items -> (UI_Layout, Store_Data)
+        return html.Div(output_content), results
 
     except Exception as e:
+        # Return two items even on error -> (Error_UI, Empty_Store_Dict)
         return html.Div([
             html.H4("⚠️ Model Execution Error", style={'color': '#C0392B', 'marginTop': '0'}),
             html.P(f"Error Details: {str(e)}", style={'color': '#922B21', 'fontFamily': 'monospace', 'fontSize': '12px'})
-        ])
+        ]), {}
