@@ -182,6 +182,21 @@ def dispatch_prediction(n_clicks, modality, text_val, image_contents, filename):
                 ])
             )
 
+            # --- NEW: Add Explainability Button ---
+            output_content.append(
+                html.Div([
+                    html.Hr(style={'margin': '15px 0'}),
+                    dcc.Link(
+                        html.Button("🔍 How Did the Model Decide?", style={
+                            'backgroundColor': '#3498DB', 'color': 'white',
+                            'border': 'none', 'padding': '10px 15px', 'fontWeight': 'bold',
+                            'borderRadius': '4px', 'cursor': 'pointer', 'width': '100%'
+                        }),
+                        href='/explain'
+                    )
+                ])
+            )
+
         return html.Div(output_content)
 
     except Exception as e:

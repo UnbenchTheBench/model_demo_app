@@ -1,8 +1,16 @@
---extra-index-url https://download.pytorch.org/whl/cpu
-torch
-torchvision
-ultralytics
-pillow
+# Core Web App Framework
 dash
-dash-bootstrap-components
 gunicorn
+
+# Image Processing (Required for handling image uploads/base64 in predict_image.py)
+Pillow
+
+# Utility & Data Handling
+numpy
+pandas
+
+# --- Optional Model Backend Dependencies ---
+# Uncomment the ones you need when connecting live models:
+ torch
+ transformers
+ torchxrayvision
