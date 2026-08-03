@@ -1,16 +1,25 @@
 # Core Web App Framework
-dash
+dash>=2.0.0
 gunicorn
 
 # Image Processing (Required for handling image uploads/base64 in predict_image.py)
-Pillow
+Pillow>=9.0.0
+opencv-python>=4.7.0
 
-# Utility & Data Handling
-numpy
-pandas
+# Numerical & Data Handling
+numpy>=1.23.0
+pandas>=1.5.0
 
-# --- Optional Model Backend Dependencies ---
-# Uncomment the ones you need when connecting live models:
- torch
- transformers
- torchxrayvision
+# Machine Learning / Vision Backend
+# If you plan to run the provided YOLO model, install PyTorch and Ultralytics
+torch
+torchvision
+ultralytics
+
+# Optional / Helpful Utilities
+python-dotenv
+
+# Notes:
+# - On headless servers, prefer opencv-python-headless instead of opencv-python.
+# - Pin exact torch versions for GPU support (e.g., torch==2.2.0+cu121) using
+#   the official PyTorch installation selector: https://pytorch.org/get-started/locally/
